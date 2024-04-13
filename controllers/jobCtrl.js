@@ -29,11 +29,11 @@ const createJob = asyncErrorHandler(async (req, res, next) => {
     appliedDate,
     userId,
   };
-  const newTodo = await Job.create(jobs);
+  const newJob = await Job.create(jobs);
   res.status(201).json({
     status: true,
     msg: "Job created",
-    data: newTodo,
+    data: newJob,
   });
 });
 
@@ -71,8 +71,39 @@ const getJobById = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
+const updateJob = asyncErrorHandler(async (req, res, next) => {
+  const userId = req.userId;
+  const fieldsToUpdate = {
+    title: req.body.title,
+    techStack: req.body.techStack,
+    companyName: req.body.companyName,
+    companyWebsite: req.body.companyWebsite,
+    status: req.body.status,
+    deadLine: req.body.deadLine,
+    appliedDate: req.body.appliedDate,
+  };
+
+  const jobToUpdate = await Job.findOne({ _id: req.params.id, userId });
+  if (!jobToUpdate) return next(new AppError("Job not found", 404));
+
+  Object.keys(fieldsToUpdate).forEach((field) => {
+    if (fieldsToUpdate[field] !== null && fieldsToUpdate[field] !== undefined) {
+      jobToUpdate[field] = fieldsToUpdate[field];
+    }
+  });
+
+  const updatedJob = await jobToUpdate.save();
+
+  res.status(200).json({
+    status: true,
+    msg: "Job updated",
+    data: updatedJob,
+  });
+});
+
 module.exports = {
   createJob,
   getJob,
   getJobById,
+  updateJob,
 };

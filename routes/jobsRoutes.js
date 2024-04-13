@@ -9,4 +9,6 @@ Router.get("/jobs", authCtrl.verifyToken, jobCtrl.getJob);
 
 Router.get("/jobs/:id", authCtrl.verifyToken, jobCtrl.getJobById);
 
+Router.patch("/jobs/:id", authCtrl.verifyToken, jobCtrl.updateJob);
+
 module.exports = Router;
