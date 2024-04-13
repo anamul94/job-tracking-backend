@@ -1,6 +1,6 @@
-# todo-backend
+# Job-tracking-backend
 
-Todo backend (EXpress JS, Mongodb)
+Jobs Tracking backend (EXpress JS, Mongodb)
 
 # To RUN
 
