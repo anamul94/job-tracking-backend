@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
+const mongoosePaginate = require("mongoose-paginate-v2");
 
-const TodoSchema = new mongoose.Schema(
+const JobSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -44,6 +45,8 @@ const TodoSchema = new mongoose.Schema(
   }
 );
 
-const Job = mongoose.model("Job", TodoSchema);
+JobSchema.plugin(mongoosePaginate);
+
+const Job = mongoose.model("Job", JobSchema);
 
 module.exports = Job;

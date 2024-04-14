@@ -1,5 +1,6 @@
 const Job = require("../models/Job");
 const ApiFeatures = require("../utils/apiFeature");
+const ApiQuery = require("../utils/apiQuery");
 const AppError = require("../utils/error/appError");
 const asyncErrorHandler = require("../utils/error/asyncErrorHandler");
 
@@ -38,21 +39,32 @@ const createJob = asyncErrorHandler(async (req, res, next) => {
 });
 
 const getJob = asyncErrorHandler(async (req, res, next) => {
-  const apiFeature = new ApiFeatures(
-    Job.find({ user_id: req.userId }),
-    req.query
-  )
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const todos = await apiFeature.query;
-  if (!todos) return next(new AppError("Not found", 404));
+  const todos = [];
+  // const sort = {};
+  // if (req.query.sort) {
+  //   sort[req.query.sort] = -1; // Assuming sorting in ascending order
+  // }
+  // const result = await Job.paginate(
+  //   { userId: req.userId },
+  //   {
+  //     page: req.query.page || 1,
+  //     limit: req.query.limit || 10,
+  //     sort: sort, // Example sorting by _id in descending order
+  //   }
+  // );
 
+  // console.log(result);
+  // if (!todos) return next(new AppError("Not found", 404));
+
+  const jobQuery = new ApiQuery(Job);
+  const result = await jobQuery.findWithFilterAndPagination(
+    req.query,
+    req.userId
+  );
   res.status(200).json({
     status: true,
-    results: todos.length,
-    data: todos,
+    results: result.totalDocs,
+    data: result.docs,
   });
 });
 

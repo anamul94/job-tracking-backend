@@ -18,7 +18,6 @@ const generateToken = async (id) => {
 
 const verifyToken = asyncErrorHandler(async (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
-  console.log(token);
   if (token === null || token === undefined)
     return res.status(401).json({ msg: "plz provide token" });
   try {
@@ -28,7 +27,6 @@ const verifyToken = asyncErrorHandler(async (req, res, next) => {
     }
 
     const user = await User.findById(decode.id);
-    console.log(user);
     if (!user) {
       console.log("User not found");
       return next(new AppError("Invalid token", 403));
